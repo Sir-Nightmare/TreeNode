@@ -234,36 +234,6 @@ public class TreeNodeImpl implements TreeNode {
      * @return the node found or <code>null</code> if no matching data was found.
      */
 
-
-    public TreeNode findChild(String data) {
-        if (data == null) {
-            if (this.userData == null) {
-                return this;
-            } else {
-                if (numberOfChildren != 0) {
-                    for (TreeNode child : this.children) {
-                        return child.findChild(null);
-                    }
-                } else {
-                    return null;
-                }
-            }
-        }
-        if (this.userData.equals(data)) {
-            return this;
-        } else {
-            if (numberOfChildren != 0) {
-                for (TreeNode child : this.children) {
-                    return child.findChild(data);
-                }
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-
     public TreeNode findChild(Object data) {
         TreeNode result = null;
         if (data == null) {
