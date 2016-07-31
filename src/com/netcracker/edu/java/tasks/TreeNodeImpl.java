@@ -265,7 +265,6 @@ public class TreeNodeImpl implements TreeNode {
 
 
     public TreeNode findChild(Object data) {
-        TreeNode result = null;
         if (data == null) {
             if (this.userData == null) {
                 return this;
@@ -281,22 +280,21 @@ public class TreeNodeImpl implements TreeNode {
                     return null;
                 }
             }
+        } else if (this.userData.equals(data)) {
+            return this;
         } else {
-            if (this.userData.equals(data)) {
-                return this;
-            } else {
-                if (numberOfChildren != 0) {
-                    for (TreeNode child : this.children) {
-                        TreeNode res1 = child.findChild(data);
-                        if (res1 != null) {
-                            return res1;
-                        }
+            if (numberOfChildren != 0) {
+                for (TreeNode child : this.children) {
+                    TreeNode res1 = child.findChild(data);
+                    if (res1 != null) {
+                        return res1;
                     }
-                } else {
-                    return null;
                 }
+            } else {
+                return null;
             }
         }
-        return result;
+
+        return null;
     }
 }
