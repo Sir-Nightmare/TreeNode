@@ -1,18 +1,46 @@
 package com.netcracker.edu.java.tasks;
 
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Sir Nightmare on 07/29/16.
+ * Class for TreeNode
  */
-public class TreeNodeImpl implements TreeNode
-{
+public class TreeNodeImpl implements TreeNode {
+
+
+    private TreeNode parent;
+    private int numberOfChildren = 0;
+    private List<TreeNode> children;
+    private boolean isExpanded = false;
+    private Object userData;
+
+    public TreeNodeImpl() {
+    }
+
+    public TreeNodeImpl(Object userData) {
+        this.userData = userData;
+    }
+
+    public TreeNodeImpl(TreeNode parent) {
+        this.parent = parent;
+    }
+
+    public TreeNodeImpl(TreeNode parent, Object userData) {
+        this.parent = parent;
+        this.userData = userData;
+    }
+
+
     /**
      * Returns the parent <code>TreeNode</code>.
      */
     @Override
     public TreeNode getParent() {
-        return null;
+        return parent;
     }
 
     /**
@@ -24,7 +52,7 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public void setParent(TreeNode parent) {
-
+        this.parent = parent;
     }
 
     /**
@@ -34,7 +62,10 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public TreeNode getRoot() {
-        return null;
+        if (this.parent == null) {
+            return null;
+        }
+        return parent.getRoot();
     }
 
     /**
@@ -44,7 +75,7 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public boolean isLeaf() {
-        return false;
+        return numberOfChildren == 0;
     }
 
     /**
@@ -52,7 +83,7 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public int getChildCount() {
-        return 0;
+        return numberOfChildren;
     }
 
     /**
@@ -60,7 +91,7 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public Iterator<TreeNode> getChildrenIterator() {
-        return null;
+        return children.iterator();
     }
 
     /**
@@ -70,7 +101,12 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public void addChild(TreeNode child) {
-
+        if (numberOfChildren == 0) {
+            children = new ArrayList<TreeNode>();
+        }
+        children.add(child);
+        numberOfChildren++;
+        child.setParent(this);
     }
 
     /**
@@ -82,6 +118,12 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public boolean removeChild(TreeNode child) {
+        if (children.contains(child)) {
+            children.remove(child);
+            child.setParent(null);
+            numberOfChildren--;
+            return true;
+        }
         return false;
     }
 
@@ -92,7 +134,8 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public boolean isExpanded() {
-        return false;
+
+        return isExpanded;
     }
 
     /**
@@ -102,7 +145,12 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public void setExpanded(boolean expanded) {
-
+        this.isExpanded = expanded;
+        if (this.numberOfChildren != 0) {
+            for (TreeNode child : this.children) {
+                child.setExpanded(expanded);
+            }
+        }
     }
 
     /**
@@ -111,7 +159,7 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public Object getData() {
-        return null;
+        return userData;
     }
 
     /**
@@ -119,9 +167,9 @@ public class TreeNodeImpl implements TreeNode
      *
      * @param data
      */
-    @Override
-    public void setData(Object data) {
 
+    public void setData(Object data) {
+        this.userData = data;
     }
 
     /**
@@ -132,7 +180,17 @@ public class TreeNodeImpl implements TreeNode
      */
     @Override
     public String getTreePath() {
-        return null;
+        String tempData;
+
+        if (this.userData != null) {
+            tempData = this.getData().toString();
+        } else {
+            tempData = "empty";
+        }
+        if (parent != null) {
+            return parent.getTreePath() + "->" + tempData;
+        }
+        return tempData;
     }
 
     /**
@@ -143,9 +201,31 @@ public class TreeNodeImpl implements TreeNode
      * @param data the data to find; may be <code>null</code>
      * @return the node found or <code>null</code> if no matching data was found.
      */
-    @Override
+
     public TreeNode findParent(Object data) {
-        return null;
+        if (data == null) {
+            if (this.userData == null) {
+                return this;
+            } else {
+                if (this.parent!=null) {
+                    return parent.findParent(null);
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        if (this.parent.equals(data)) {
+            return this;
+        }
+        else {
+            if (this.parent!=null) {
+                return parent.findParent(data);
+            }
+            else {
+                return null;
+            }
+        }
     }
 
     /**
@@ -156,8 +236,45 @@ public class TreeNodeImpl implements TreeNode
      * @param data the data to find; may be <code>null</code>
      * @return the node found or <code>null</code> if no matching data was found.
      */
-    @Override
+
     public TreeNode findChild(Object data) {
-        return null;
+        TreeNode result=null;
+        if (data == null) {
+            if (this.userData == null) {
+                result=this;
+            } else {
+                if (numberOfChildren != 0) {
+                    for (TreeNode child : this.children) {
+                        if(child.getData()==null){
+                            result=child;
+                            break;
+                        }
+                        else{
+                            child.findChild(null);
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+        if (this.userData.equals(data)) {
+            result=this;
+        } else {
+            if (numberOfChildren != 0) {
+                for (TreeNode child : this.children) {
+                    if(child.getData().equals(data)){
+                        result=child;
+                        break;
+                    }
+                    else{
+                        child.findChild(null);
+                    }
+                }
+            } else {
+                return null;
+            }
+        }
+        return result;
     }
 }

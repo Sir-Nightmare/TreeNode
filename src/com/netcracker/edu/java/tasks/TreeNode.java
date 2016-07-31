@@ -22,6 +22,7 @@ import java.util.Iterator;
  */
 public interface TreeNode {
 
+
     /**
      * Returns the parent <code>TreeNode</code>.
      */
