@@ -207,22 +207,19 @@ public class TreeNodeImpl implements TreeNode {
             if (this.userData == null) {
                 return this;
             } else {
-                if (this.parent!=null) {
+                if (this.parent != null) {
                     return parent.findParent(null);
-                }
-                else {
+                } else {
                     return null;
                 }
             }
         }
         if (this.parent.equals(data)) {
             return this;
-        }
-        else {
-            if (this.parent!=null) {
+        } else {
+            if (this.parent != null) {
                 return parent.findParent(data);
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -237,21 +234,15 @@ public class TreeNodeImpl implements TreeNode {
      * @return the node found or <code>null</code> if no matching data was found.
      */
 
-    public TreeNode findChild(Object data) {
-        TreeNode result=null;
+
+    public TreeNode findChild(String data) {
         if (data == null) {
             if (this.userData == null) {
-                result=this;
+                return this;
             } else {
                 if (numberOfChildren != 0) {
                     for (TreeNode child : this.children) {
-                        if(child.getData()==null){
-                            result=child;
-                            break;
-                        }
-                        else{
-                            child.findChild(null);
-                        }
+                        return child.findChild(null);
                     }
                 } else {
                     return null;
@@ -259,21 +250,54 @@ public class TreeNodeImpl implements TreeNode {
             }
         }
         if (this.userData.equals(data)) {
-            result=this;
+            return this;
         } else {
             if (numberOfChildren != 0) {
                 for (TreeNode child : this.children) {
-                    if(child.getData().equals(data)){
-                        result=child;
-                        break;
-                    }
-                    else{
-                        child.findChild(null);
-                    }
+                    return child.findChild(data);
                 }
             } else {
                 return null;
             }
+        }
+        return null;
+    }
+
+
+    public TreeNode findChild(Object data) {
+        TreeNode result = null;
+        if (data == null) {
+            if (this.userData == null) {
+                result = this;
+            } else {
+                if (numberOfChildren != 0) {
+                    for (TreeNode child : this.children) {
+                        TreeNode res1 = child.findChild(null);
+                        if (res1 != null) {
+                            return res1;
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            if (this.userData.equals(data)) {
+                result = this;
+            } else {
+                if (numberOfChildren != 0) {
+                    for (TreeNode child : this.children) {
+                        TreeNode res1 = child.findChild(data);
+                        if (res1 != null) {
+                            return res1;
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+
+
         }
         return result;
     }
