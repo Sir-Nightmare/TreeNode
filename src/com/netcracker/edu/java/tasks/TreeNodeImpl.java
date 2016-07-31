@@ -268,7 +268,7 @@ public class TreeNodeImpl implements TreeNode {
         TreeNode result = null;
         if (data == null) {
             if (this.userData == null) {
-                result = this;
+                return this;
             } else {
                 if (numberOfChildren != 0) {
                     for (TreeNode child : this.children) {
@@ -283,7 +283,7 @@ public class TreeNodeImpl implements TreeNode {
             }
         } else {
             if (this.userData.equals(data)) {
-                result = this;
+                return this;
             } else {
                 if (numberOfChildren != 0) {
                     for (TreeNode child : this.children) {
@@ -296,8 +296,6 @@ public class TreeNodeImpl implements TreeNode {
                     return null;
                 }
             }
-
-
         }
         return result;
     }
